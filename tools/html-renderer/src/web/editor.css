@@ -1,0 +1,135 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #182220;
+  background: #ebe7dd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+  min-height: 100vh;
+}
+
+.workspace.preview-only {
+  grid-template-columns: 1fr;
+}
+
+.workspace.preview-only .source-pane {
+  display: none;
+}
+
+.pane {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+}
+
+.source-pane {
+  border-right: 1px solid #d4cec2;
+  background: #f8f6f1;
+}
+
+.preview-pane {
+  background: #ebe7dd;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 18px;
+  border-bottom: 1px solid #d4cec2;
+}
+
+.preview-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+button {
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid #c8c0b2;
+  border-radius: 6px;
+  color: #172026;
+  background: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: #a8a094;
+  background: #f0ede6;
+}
+
+#editButton[aria-expanded="true"] {
+  border-color: #b42c3d;
+  color: #ffffff;
+  background: #b42c3d;
+}
+
+#statusText {
+  color: #58635f;
+  font-size: 13px;
+}
+
+#sourceInput {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  resize: none;
+  padding: 20px;
+  border: 0;
+  outline: 0;
+  color: #172026;
+  background: #fbfaf7;
+  font: 15px/1.55 Consolas, "Cascadia Mono", "SFMono-Regular", monospace;
+}
+
+#sourceInput:focus {
+  box-shadow: inset 0 0 0 2px #b42c3d;
+}
+
+#previewFrame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  background: #ffffff;
+}
+
+@media (max-width: 860px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(360px, 48vh) minmax(360px, 52vh);
+  }
+
+  .workspace.preview-only {
+    grid-template-rows: 1fr;
+  }
+
+  .source-pane {
+    border-right: 0;
+    border-bottom: 1px solid #d4cec2;
+  }
+}

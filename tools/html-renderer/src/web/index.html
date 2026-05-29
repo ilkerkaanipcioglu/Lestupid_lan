@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LeStupid Renderer</title>
+  <link rel="stylesheet" href="/editor.css">
+</head>
+<body>
+  <main id="workspace" class="workspace preview-only">
+    <section class="pane source-pane" aria-label="LeStupid source">
+      <header class="toolbar">
+        <h1>Edit</h1>
+        <button id="resetButton" type="button">Reset</button>
+      </header>
+      <textarea id="sourceInput" spellcheck="false"></textarea>
+    </section>
+
+    <section class="pane preview-pane" aria-label="Rendered preview">
+      <header class="toolbar">
+        <div class="preview-title">
+          <button id="editButton" type="button" aria-expanded="false">Edit</button>
+          <h2>Preview</h2>
+        </div>
+        <span id="statusText">Ready</span>
+      </header>
+      <iframe id="previewFrame" title="Rendered HTML preview"></iframe>
+    </section>
+  </main>
+
+  <script src="/editor.js"></script>
+</body>
+</html>

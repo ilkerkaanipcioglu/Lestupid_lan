@@ -1,105 +1,308 @@
-# LeStupid
+# LeStupid Language Guide
 
-> *"O kadar basit ki aptal gibi görünür — ama her şeyi yapar."*
+This is the canonical guide for LeStupid.
 
----
+It is written so a human can learn the language quickly and an AI agent can read this one file to understand how to parse, write, explain, and transform LeStupid documents.
 
-## Felsefe
+## 1. Purpose
 
-### Temel İnanç
+LeStupid is a human-first structured language.
 
-Diller insanları değil, insanlar dilleri şekillendirmeli.
+It can describe:
 
-Bugün bir web sayfası yazmak için HTML öğrenmek gerekiyor. Bir uygulama yazmak için Rust ya da Elixir öğrenmek gerekiyor. Bir not almak için Markdown'ın kurallarını ezberlemek gerekiyor. Her araç kendi dilini dayatıyor.
+- Notes and documents
+- Web pages and UI layouts
+- Forms and content cards
+- Data-like records
+- Workflow steps
+- AI instructions and prompts
+- Code-shaped logic when needed
 
-LeStupid bunu tersine çevirir.
+LeStupid is not tied to one renderer, editor, framework, or programming language. A tool may convert LeStupid to HTML, React, Markdown, JSON, SQL, Python, Elixir, Rust, or another target, but the language itself remains independent.
 
-**Düşündüğün gibi yaz. LeStupid gerisini halleder.**
+LeStupid should stay simpler than Markdown and HTML5. Markdown is useful text syntax. HTML5 is useful output structure. LeStupid sits before both: it captures human intent in a form an AI can understand and a person can still write without fear.
 
-### Üç İlke
+## Required Element Core
 
-**1. Sezgisel**
-Her kural tahmin edilebilir. Bir şeyi bir kez gören kişi bir daha bakmaz. Çocuk da yazar, kıdemli geliştirici de.
+A LeStupid implementation should start with this small element set.
 
-**2. Evrensel**
-Tek bir dil — not, web sayfası, uygulama mantığı, AI talimatı. Hedef ne olursa olsun, LeStupid aynı şekilde yazılır.
+| Element | Purpose | Example |
+| --- | --- | --- |
+| `metadata` | Describe the whole file | `title`, `description`, `language` |
+| `text` | Plain readable content | paragraph, `# heading`, quote, list |
+| `link` | Navigation | `[Read](/docs)` |
+| `button` | Clear action | `[Start !button](/start)` |
+| `section` | Page or document area | `section:` |
+| `grid` | Repeated layout | `grid(2):` |
+| `card` | One grouped item | `card:` |
+| `form` | User input | `form:` |
+| `field` | One input line | `name | text | Name` |
+| `media` | Image, video, audio | `image: /cover.jpg` |
+| `data` | Structured facts | `data:` |
+| `workflow` | Ordered process | `workflow:` |
+| `prompt` | AI instruction | `prompt:` |
+| `code(target)` | Explain code intent to AI | `code(rust-ai):` |
 
-**3. AI-native**
-LeStupid, AI ile birlikte çalışmak için tasarlanmıştır. AI LeStupid okur, anlar, üretir. İnsan ve AI arasındaki en kısa yol.
+These elements are enough for the first useful language surface. More elements can exist later, but they should not make basic writing harder.
 
-### Rakiplerden Farkı
+### Target Rule for Code Intent
 
-| | Markdown | HTML | Rust/Elixir | LeStupid |
-|---|---|---|---|---|
-| Not alma | ✅ | ❌ | ❌ | ✅ |
-| Web sayfası | ⚠️ | ✅ | ❌ | ✅ |
-| UI bileşenleri | ❌ | ✅ | ❌ | ✅ |
-| Uygulama mantığı | ❌ | ❌ | ✅ | ✅ |
-| AI dostu | ⚠️ | ❌ | ❌ | ✅ |
-| Sezgisel | ✅ | ❌ | ❌ | ✅ |
-| Öğrenme süresi | 10 dk | Haftalar | Aylar | 10 dk |
+When a `code` block explains programming intent, `target` decides whether the output language is fixed.
 
----
+If `target` is missing, the AI may choose an implementation language such as Python, C++, Elixir, Rust, or another suitable target.
 
-## Dil Tasarımı
+If `target` is present, the language is explicit:
 
-### Temel Kurallar (Sadece 5)
-
-1. `eleman: içerik` — tek satır
-2. Girinti ile iç içe yapı
-3. `"tırnak"` — metin değeri
-4. `/yol` — link veya kaynak
-5. Blok açılır `:eleman` ile kapanır
-
-### Web Katmanı
-
+```lestupid
+code:
+  target: Elixir
+  module: Notes
+  function: summarize(notes)
+  input: list of strings
+  output: short string
+  rules:
+    - ignore empty notes
+    - keep the input language
+    - return "No notes" when empty
+:code
 ```
-# Başlık 1
-## Başlık 2
-### Başlık 3
 
-Düz metin direkt yazılır.
+Here the AI should generate or explain Elixir, not Python or C++.
 
-*kalın*   _italik_   ~üstü çizili~   `kod`
+## 2. Philosophy
 
-[Link metni](/url)
-[Buton](/url !buton)
-![Resim açıklaması](/resim.jpg)
+LeStupid begins with one belief:
 
+People should shape tools with natural thought; tools should not force people to think like machines.
+
+The language should feel like structured writing, not like ceremony. A valid LeStupid file should look close to a clear note, a product sketch, a page outline, or an instruction to an assistant.
+
+The name is playful. The goal is not stupidity; the goal is obviousness. Clever syntax is avoided when plain structure is enough.
+
+## 3. Natural Language Rule
+
+LeStupid does not force English, Turkish, or any single natural language.
+
+The author may write in the language of the document:
+
+- English documents may use names like `section`, `card`, `button`, `title`.
+- Turkish documents may use names like `bolum`, `bölüm`, `kart`, `buton`, `başlık`.
+- Mixed documents are allowed when useful.
+
+Tools should normalize known aliases to the same structural meaning.
+
+Example:
+
+```lestupid
+section(dark):
+  # Clear Work
+  Write plainly.
+:section
+```
+
+```lestupid
+bolum(koyu):
+  # Açık İş
+  Sade yaz.
+:bolum
+```
+
+Both mean the same kind of structure.
+
+## 4. Core Syntax
+
+LeStupid has five core rules.
+
+1. `name: value` creates a simple value.
+2. Indentation creates hierarchy.
+3. `block:` opens a block.
+4. `:block` closes a block.
+5. Plain text remains plain text unless it uses a known mark.
+
+Example:
+
+```lestupid
+title: My Page
+language: en
+
+section:
+  # Hello
+  This is a paragraph.
+:section
+```
+
+## 5. Front Matter
+
+Front matter describes the whole document.
+
+It starts with `===` and ends with `===`.
+
+```lestupid
+===
+title: Product Notes
+description: Early ideas for the first release
+language: en
+theme: clean
+===
+```
+
+Common metadata names:
+
+| Meaning | English | Turkish |
+| --- | --- | --- |
+| Title | `title` | `başlık`, `baslik` |
+| Description | `description` | `açıklama`, `aciklama` |
+| Language | `language` | `dil` |
+| Theme | `theme` | `tema` |
+| Author | `author` | `yazar` |
+
+Tools should preserve unknown metadata keys.
+
+## 6. Blocks
+
+A block is a named container.
+
+```lestupid
+section:
+  # Heading
+  Body text.
+:section
+```
+
+Blocks may include options in parentheses.
+
+```lestupid
+section(dark full):
+  # Hero
+:section
+```
+
+Options may also be written in Turkish.
+
+```lestupid
+bolum(koyu tam-ekran):
+  # Karşılama
+:bolum
+```
+
+Common structural aliases:
+
+| Meaning | English | Turkish |
+| --- | --- | --- |
+| Section | `section` | `bolum`, `bölüm` |
+| Grid | `grid` | `izgara` |
+| Card | `card` | `kart` |
+| Form | `form` | `form` |
+| Field | `field` | `alan` |
+| List | `list` | `liste` |
+| Item | `item` | `madde` |
+| Data | `data` | `veri` |
+| Step | `step` | `adım`, `adim` |
+| Task | `task` | `görev`, `gorev` |
+| Prompt | `prompt` | `komut`, `istem` |
+
+Common option aliases:
+
+| Meaning | English | Turkish |
+| --- | --- | --- |
+| Dark | `dark` | `koyu` |
+| Light | `light` | `acik`, `açık` |
+| Gray | `gray`, `grey` | `gri` |
+| Full screen | `full`, `full-screen` | `tam-ekran` |
+| Primary | `primary` | `birincil` |
+| Secondary | `secondary` | `ikincil` |
+| Button | `button` | `buton` |
+
+## 7. Text Markup
+
+LeStupid uses familiar lightweight marks.
+
+```lestupid
+# Heading 1
+## Heading 2
+### Heading 3
+
+Plain paragraph text.
+
+*bold*
+_italic_
+~deleted~
+`inline code`
+
+[Link text](/url)
+[Button text !button](/url)
+[Buton metni !buton](/url)
+![Image alt](/image.jpg)
+
+> Quote text
 ---
+```
 
-- madde
-- madde
-  - alt madde
+Lists:
 
-1. birinci
-2. ikinci
+```lestupid
+- item
+- item
+  - nested item
 
-> alıntı bloku
+1. first
+2. second
+```
 
-| Ad    | Yaş | Şehir    |
-| Ali   | 32  | İstanbul |
-| Ayşe  | 28  | Ankara   |
+Tables:
 
-::not      Bu bir bilgi kutusudur.
-::uyarı    Bu işlem geri alınamaz.
-::hata     Bir şeyler ters gitti.
-::başarı   Form gönderildi.
+```lestupid
+| Name | Age | City |
+| Ada  | 32  | Ankara |
+```
 
-@video(/tanitim.mp4)
-@ses(/muzik.mp3)
+## 8. UI Structures
 
+LeStupid can describe interface structure without requiring a UI framework.
+
+```lestupid
 grid(3):
-  kart:
-    # Başlık
-    Açıklama metni
-  :kart
-  kart:
-    # Başlık
-    Açıklama metni
-  :kart
-:grid
+  card:
+    # Notes
+    Capture thoughts with structure.
+    [Open !button](/notes)
+  :card
 
+  card:
+    # Pages
+    Turn outlines into pages.
+    [Open !button](/pages)
+  :card
+:grid
+```
+
+Turkish version:
+
+```lestupid
+izgara(3):
+  kart:
+    # Notlar
+    Fikirleri yapılı şekilde tut.
+    [Aç !buton](/notlar)
+  :kart
+:izgara
+```
+
+Forms:
+
+```lestupid
+form:
+  name    | text     | Name
+  email   | email    | Email
+  message | textarea | Message
+  ---
+  Send
+:form
+```
+
+Turkish form:
+
+```lestupid
 form:
   ad     | metin | Adınız
   email  | email | E-posta
@@ -107,196 +310,239 @@ form:
   ---
   Gönder
 :form
-
-bölüm(koyu):
-  # İçerik
-:bölüm
-
-===
-başlık: Sayfa Adı
-açıklama: SEO metni
-dil: tr
-===
 ```
 
-### Kod Katmanı
+## 9. Data Structures
 
+Data can be written as simple values or nested records.
+
+```lestupid
+person:
+  name: Ada
+  role: Designer
+  active: true
+:person
 ```
-isim = "Ali"
-yaş = 32
+
+Turkish:
+
+```lestupid
+kisi:
+  ad: Ada
+  rol: Tasarımcı
+  aktif: doğru
+:kisi
+```
+
+Tools should preserve original keys unless a target format requires normalization.
+
+## 10. Workflow Structures
+
+LeStupid can describe processes for humans or agents.
+
+```lestupid
+workflow:
+  step: Read the request
+  step: Identify the output
+  step: Produce the smallest useful result
+  step: Verify before finishing
+:workflow
+```
+
+Turkish:
+
+```lestupid
+akis:
+  adim: İsteği oku
+  adim: Çıktıyı belirle
+  adim: En küçük faydalı sonucu üret
+  adim: Bitirmeden doğrula
+:akis
+```
+
+## 11. AI Instructions
+
+An AI-facing LeStupid file should be direct and structured.
+
+```lestupid
+prompt:
+  role: You are a careful product assistant.
+  goal: Turn notes into a clean feature brief.
+  input:
+    - User notes
+    - Existing constraints
+  output:
+    format: Markdown
+    include:
+      - Summary
+      - Requirements
+      - Open questions
+:prompt
+```
+
+Turkish:
+
+```lestupid
+istem:
+  rol: Dikkatli bir ürün asistanısın.
+  amaç: Notları temiz bir özellik özetine çevir.
+  çıktı:
+    biçim: Markdown
+    dahil:
+      - Özet
+      - Gereksinimler
+      - Açık sorular
+:istem
+```
+
+An AI agent reading LeStupid should:
+
+1. Preserve the writer's natural language.
+2. Infer structure from blocks, indentation, and labels.
+3. Normalize known aliases only internally.
+4. Avoid inventing hidden behavior.
+5. Ask for clarification only when the target output is ambiguous.
+
+## 12. Logic Layer
+
+LeStupid may express code-shaped intent, but it should remain readable.
+
+```lestupid
+name = "Ada"
+age = 32
+active = true
+
+function greet(name):
+  return "Hello " + name
+
+if age > 18:
+  print "Adult"
+else:
+  print "Child"
+```
+
+Turkish:
+
+```lestupid
+ad = "Ada"
+yas = 32
 aktif = doğru
 
-fonk selamVer(isim):
-  döndür "Merhaba " + isim
+fonk selamla(ad):
+  döndür "Merhaba " + ad
 
-eğer yaş > 18:
+eğer yas > 18:
   yazdır "Yetişkin"
 değilse:
   yazdır "Çocuk"
-
-her ürün için liste:
-  yazdır ürün.ad
-
-dene:
-  dosya aç "veri.txt"
-hata:
-  yazdır "Dosya bulunamadı"
-sonunda:
-  kapat
-
-eşleş sonuç:
-  tamam, değer → yazdır değer
-  hata, sebep  → yazdır "Hata: " + sebep
-  boş          → yazdır "Veri yok"
-
-paralel:
-  görev1()
-  görev2()
-
-boru liste:
-  | filtrele x > 2
-  | dönüştür x * 2
-  | topla
 ```
 
-### Web + Kod Birlikte
+The logic layer is descriptive first. A compiler may later map it to a real programming language.
 
-```
-# Sipariş Hesaplama
+## 13. Error Philosophy
 
-Bu fonksiyon sepet toplamını hesaplar.
+Errors should be written for the document author.
 
-@kod:
-  fonk hesapla(sepet):
-    toplam = sepet.topla()
-    döndür toplam
-:@kod
+Good error:
 
-[Hesapla !buton]
+```text
+The block "section" was opened but not closed. Add ":section".
 ```
 
----
+Turkish document error:
 
-## Ekosistem — Yapılacaklar
-
-### Aşama 1 — Temel (MVP)
-
-- [ ] Dil spesifikasyonu — tüm kuralların yazılı tanımı
-- [ ] Web parser — LeStupid → HTML dönüştürücü (JavaScript)
-- [ ] Tarayıcı editörü — sol yaz, sağ gör, canlı preview
-- [ ] Dosya kaydet / aç — `.ls` uzantısı
-- [ ] Temel syntax renklendirme
-
-### Aşama 2 — Editor
-
-- [ ] Masaüstü uygulama (Electron)
-- [ ] Obsidian plugin — vault içinde `.ls` dosyaları
-- [ ] VS Code extension — syntax highlight + preview
-- [ ] Otomatik tamamlama — `gri` yazınca `grid():` önerir
-- [ ] Hata mesajları — sezgisel, Türkçe/İngilizce
-
-### Aşama 3 — AI Entegrasyonu
-
-- [ ] "Rust'a çevir" butonu — LeStupid → AI → Rust
-- [ ] "Elixir'e çevir" butonu — LeStupid → AI → Elixir
-- [ ] "Python'a çevir" butonu
-- [ ] "SQL'e çevir" butonu
-- [ ] AI ile birlikte yazma — yarım bırak, AI tamamlar
-- [ ] Doğal dilden LeStupid üretme — "bir ürün kartı yap" → LeStupid kodu
-
-### Aşama 4 — Web Yayınlama
-
-- [ ] CLI tool — `ls build index.ls` → `index.html`
-- [ ] Tema sistemi — renk tokenları, font sistemi
-- [ ] Bileşen kütüphanesi — hazır kartlar, formlar, layoutlar
-- [ ] LeStupid → React dönüştürücü
-- [ ] Statik site üretici — tüm `.ls` → tam web sitesi
-
-### Aşama 5 — Topluluk
-
-- [ ] lestupid.dev — resmi site (LeStupid ile yazılmış)
-- [ ] Canlı playground — tarayıcıda dene
-- [ ] Dökümantasyon sitesi
-- [ ] GitHub repo — açık kaynak
-- [ ] Örnek projeler — blog, portföy, landing page, not defteri
-- [ ] Discord / topluluk
-
----
-
-## Dosya Yapısı
-
-```
-proje/
-  index.ls          → ana sayfa
-  hakkimda.ls       → hakkımda
-  notlar/
-    toplanti.ls     → not dosyası
-    fikir.ls
-  bilesenler/
-    kart.ls         → tekrar kullanılabilir bileşen
-    menu.ls
-  tema.ls           → renk ve font tanımları
+```text
+"bolum" bloğu açıldı ama kapanmadı. ":bolum" ekleyin.
 ```
 
----
+Bad error:
 
-## Örnek: Tam Bir Sayfa
-
+```text
+Unexpected token at ASTNode:14
 ```
+
+## 14. Complete Example
+
+```lestupid
 ===
-başlık: Harezm Technology
-açıklama: SAP ve AI çözümleri
-renk: #580F41
+title: LeStupid Demo
+description: A page written as structured thought
+language: en
+theme: clean
 ===
 
-bölüm(tam-ekran koyu):
-  # Geleceği Şimdi İnşa Et
-  SAP uzmanlığı ve yapay zeka bir arada.
-  [Keşfet !buton](/hizmetler)
-:bölüm
+section(dark):
+  # LeStupid
+  Simple writing. Clear structure. Useful output.
+  [Start !button](/start)
+:section
 
-bölüm:
-  ## Hizmetlerimiz
+grid(3):
+  card:
+    # Notes
+    Write ideas as they arrive.
+  :card
 
-  grid(3):
-    kart:
-      # SAP Danışmanlık
-      FI/CO, e-Dönüşüm ve otomasyon çözümleri.
-    :kart
-    kart:
-      # AI Otomasyon
-      AgentandBot ile iş süreçleri otomatikleşir.
-    :kart
-    kart:
-      # E-Dönüşüm
-      e-Fatura, e-Defter, yasal uyumluluk.
-    :kart
-  :grid
-:bölüm
+  card:
+    # Interfaces
+    Sketch screens with readable blocks.
+  :card
 
-bölüm(gri):
-  ## İletişim
+  card:
+    # AI
+    Give agents low-noise instructions.
+  :card
+:grid
 
-  form:
-    ad     | metin | Adınız
-    email  | email | E-posta
-    mesaj  | alan  | Mesajınız
-    ---
-    Gönder
-  :form
-:bölüm
+prompt:
+  role: You are an assistant that understands LeStupid.
+  task: Convert this document into clean HTML.
+  preserve_language: true
+:prompt
 ```
 
----
+Turkish:
 
-## Özet
+```lestupid
+===
+başlık: LeStupid Demo
+açıklama: Yapılı düşünceyle yazılmış bir sayfa
+dil: tr
+tema: temiz
+===
 
-LeStupid bir programlama dili değil.
-Bir markup dili de değil tam olarak.
+bolum(koyu):
+  # LeStupid
+  Sade yazı. Açık yapı. Faydalı çıktı.
+  [Başla !buton](/basla)
+:bolum
 
-**İnsan düşüncesi ile dijital çıktı arasındaki en kısa yol.**
+izgara(3):
+  kart:
+    # Notlar
+    Fikirleri geldiği gibi yaz.
+  :kart
 
-Not al. Web sayfası yaz. Uygulama mantığını ifade et. AI'ya talimat ver.
-Hepsini aynı dille. Öğrenmesi 10 dakika.
+  kart:
+    # Arayüzler
+    Ekranları okunabilir bloklarla tasarla.
+  :kart
 
-> *Le Stupid. Because smart is overrated.*
+  kart:
+    # AI
+    Ajanlara düşük gürültülü talimat ver.
+  :kart
+:izgara
+
+istem:
+  rol: LeStupid anlayan bir asistansın.
+  görev: Bu belgeyi temiz HTML'e çevir.
+  dili_koru: doğru
+:istem
+```
+
+## 15. Implementation Rule
+
+If a tool implements LeStupid, it should treat this file as the source of truth.
+
+Tools may be incomplete. The language guide is allowed to be ahead of the tools.

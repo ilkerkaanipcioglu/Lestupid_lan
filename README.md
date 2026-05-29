@@ -1,87 +1,65 @@
-# LeStupid 🧠✨
+# LeStupid
 
-> *"Bir dil yazacağız, çünkü neden yazmayalım ki?"*
+LeStupid is a small human-first language for expressing thoughts, documents, interfaces, workflows, and AI instructions with the same plain structure.
 
----
+The purpose of this repository is the language itself: its philosophy, grammar, behavior, and examples. Tools are secondary and live under `tools/` so they never define the language.
 
-## 📖 Manifesto & Felsefe
+## Start Here
 
-Her şey kelimelerle başladı. İnsan düşündü, konuştu, aktardı. Sonra makineler geldi; karmaşık kurallar, parantezler, noktalı virgüller ve bitmek bilmeyen sözdizimi savaşları başladı. İnsan, kendi yarattığı makineye derdini anlatabilmek için onun dilini öğrenmek zorunda kaldı. 
+Read [lestupid.md](lestupid.md) for the complete language guide.
 
-Biz bu düzeni tersine çevirmek için buradayız. 
+That file is intentionally self-contained. A person should be able to write LeStupid by intuition, and an AI agent should be able to understand the language by reading that one file.
 
-**LeStupid**, akıllı olmaya çalışmayan, karmaşadan beslenmeyen, olabildiğince "aptal" ve yalın bir dildir. Çünkü biz inanıyoruz ki: **Zeka, sadeliğin ardında gizlidir.**
+## Core Idea
 
-### 🤝 İnsan ve Yapay Zekanın Ortak Köprüsü
+LeStupid does not force a single natural language.
 
-Bu dil, sadece insanlar için yazılmadı. Bu dil, sadece makineler için de derlenmedi. 
-Bu dil, **insan ile yapay zekanın (AI) aynı sayfada buluştuğu ortak bir bilinç alanıdır.**
-
-- **İnsan okuduğunda zorlanmaz:** Tıpkı zihnindeki bir düşünce bulutu ya da temiz bir deftere alınmış el yazısı notlar gibidir. Gözü yormaz, beyni kurallarla boğmaz.
-- **Yapay Zeka okuduğunda duraksamaz:** Karmaşık semantik analizlere, binlerce satırlık AST (Soyut Sözdizimi Ağacı) yapılarına gerek kalmaz. AI, LeStupid'i görür görmez anlar, yorumlar ve anında çalışan bir koda dönüştürür.
-
-İnsan yazar, AI anlar. AI üretir, insan yaşar. Araya giren tüm o gürültüleri, derleme hatalarını ve karmaşık kurulumları kaldırıyoruz.
-
----
-
-## 🌟 Üç Altın İlke
-
-1. **Sezgisel (Intuitive)**
-   Bir kuralı bir kez gören, ömrü boyunca unutmaz. Çocukların oyun kurması kadar doğal, deneyimli bir mühendisin sistem tasarlaması kadar akıcı.
-
-2. **Evrensel (Universal)**
-   Not almak, statik bir web sayfası tasarlamak, dinamik bir arayüz oluşturmak ya da bir AI modeline karmaşık talimatlar vermek... Hepsi tek bir yapıda, aynı sadelikle.
-
-3. **Yapay Zeka Odaklı (AI-Native)**
-   LeStupid, yapay zekanın yükseldiği bu çağda doğdu. O, makinelerle konuşmanın en doğal, en kayıpsız ve en şairane yoludur.
-
----
-
-## ⚡ Bir Bakışta LeStupid
-
-O kadar yalın ki, kuralları sadece 5 maddede özetlenebilir:
-
-1. `eleman: içerik` — Her şey bir eleman ve onun değeridir.
-2. **Girintiler** — İç içe yapıları ve hiyerarşiyi belirler.
-3. `"tırnak"` — Metinleri ve ham değerleri sarmalar.
-4. `/yol` — Bağlantıları ve kaynakları işaret eder.
-5. `blok:` ve `:blok` — Çok satırlı yapıları sınırlar.
-
-### Örnek Bir Sayfa Şiiri:
+If a document is written in English, it may use English words:
 
 ```lestupid
-===
-başlık: Geleceğin Dili
-yazar: İnsan & AI
-renk: #580F41
-===
-
-bölüm(koyu):
-  # Geleceği Şimdi İnşa Et
-  SAP uzmanlığı ve yapay zeka bir arada.
-  [Keşfet !buton](/kesfet)
-:bölüm
-
-bölüm:
-  ## Neden LeStupid?
-  
-  grid(3):
-    kart:
-      # Sadelik
-      Karmaşık kurallar yok. Sadece ne düşünüyorsan o.
-    :kart
-    kart:
-      # AI Dostu
-      AI ile insan arasındaki en kısa, en temiz yol.
-    :kart
-    kart:
-      # Hız
-      Fikirlerinden uygulamaya geçiş saniyeler alır.
-    :kart
-  :grid
-:bölüm
+section(dark):
+  # Build Clearly
+  Write the idea once. Keep the structure obvious.
+  [Start !button](/start)
+:section
 ```
 
----
+If a document is written in Turkish, it may use Turkish words:
 
-> *Le Stupid. Because smart is overrated.*
+```lestupid
+bolum(koyu):
+  # Açıkça Kur
+  Fikri bir kez yaz. Yapıyı anlaşılır tut.
+  [Başla !buton](/basla)
+:bolum
+```
+
+Both are valid. The writer chooses the natural language; LeStupid keeps the structure readable.
+
+## Repository Layout
+
+```text
+lestupid.md              canonical language guide for humans and AI agents
+README.md                project orientation
+tools/html-renderer/     optional experimental HTML renderer
+```
+
+## Design Principles
+
+1. Human-first: a readable note should already be close to valid LeStupid.
+2. AI-readable: the structure should be low-noise and easy for a model to transform.
+3. Language-flexible: English and Turkish names can describe the same structural ideas.
+4. Small grammar: indentation, blocks, metadata, and simple inline marks carry most meaning.
+5. Tool-independent: renderers, editors, and compilers are implementations, not the source of truth.
+
+## Tools
+
+Tools are optional. The current experimental tool is a dependency-free HTML renderer:
+
+```bash
+cd tools/html-renderer
+npm test
+npm run build:example
+```
+
+The tool is useful for testing examples, but the language definition remains [lestupid.md](lestupid.md).

@@ -1,0 +1,20 @@
+{
+  "name": "lestupid-html-renderer",
+  "version": "0.1.0",
+  "description": "Experimental dependency-free HTML renderer for LeStupid.",
+  "type": "commonjs",
+  "bin": {
+    "lestupid-html": "src/cli.js"
+  },
+  "scripts": {
+    "build:example": "node src/cli.js examples/home.ls examples/home.html",
+    "serve": "node src/server.js",
+    "test": "node tests/render.test.js"
+  },
+  "keywords": [
+    "lestupid",
+    "html",
+    "renderer"
+  ],
+  "license": "MIT"
+}

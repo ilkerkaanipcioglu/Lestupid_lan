@@ -45,6 +45,75 @@ A LeStupid implementation should start with this small element set.
 
 These elements are enough for the first useful language surface. More elements can exist later, but they should not make basic writing harder.
 
+### Markdown Coverage Rule
+
+LeStupid should cover the familiar Markdown surface with simpler, self-explaining forms.
+
+| Markdown idea | LeStupid form |
+| --- | --- |
+| Heading | `# Main idea` |
+| Bold | `*important*` |
+| Italic | `_quiet detail_` |
+| Quote | `> quoted thought` |
+| Ordered list | `1. first` |
+| Unordered list | `- item` |
+| Task list | `- [x] done`, `- [ ] next` |
+| Inline code | `` `exact name` `` |
+| Code block | `code(target): ... :code` |
+| Horizontal rule | `---` |
+| Link | `[Read](#)` |
+| Image | `image: /cover.jpg` |
+| Table-like fields | `field: name | text | Name` |
+| Footnote-like note | `note: explanation` |
+| Heading id | `id: clear-section` before a heading |
+| Definition | `LeStupid: simple structure for humans and AI` |
+| Strikethrough | `~old idea~` |
+| Highlight | `==important idea==` |
+| Subscript | `H sub(2) O` |
+| Superscript | `X^2^` |
+| Emoji intent | `emotion: joy` or `:joy:` |
+
+The rule is not to copy Markdown exactly. The rule is to keep the author's intent obvious and make the AI transformation easy.
+
+### HTML5 and Pseudocode Rule
+
+LeStupid should express HTML5 concepts without forcing the author to write HTML tags.
+
+```lestupid
+section:
+  # Welcome
+  Explain the product in one sentence.
+  [Start !button](#)
+:section
+```
+
+A renderer may turn that into HTML5. The human does not need to write `<section>`, `<h1>`, `<p>`, and `<a>` unless they explicitly want to.
+
+LeStupid should also express code intent more naturally than traditional pseudocode. The author may write steps:
+
+```lestupid
+code(intent):
+  task: summarize notes
+  steps:
+    - remove empty notes
+    - keep the original language
+    - join the main ideas
+    - return a short summary
+:code
+```
+
+Or the author may simply describe what should happen:
+
+```lestupid
+code(intent):
+  do: summarize the notes
+  keep: original language
+  avoid: empty notes
+:code
+```
+
+An AI agent should treat both forms as implementation intent. If `target` is present, use that target language. If `target` is missing, ask or choose based on context.
+
 ### Target Rule for Code Intent
 
 When a `code` block explains programming intent, `target` decides whether the output language is fixed.

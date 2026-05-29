@@ -156,12 +156,21 @@ function renderInlineBlock(line, html) {
     html.push(`<h2>${renderInline(line.slice(3))}</h2>`);
   } else if (line.startsWith("# ")) {
     html.push(`<h1>${renderInline(line.slice(2))}</h1>`);
+  } else if (line === "---") {
+    html.push("<hr>");
   } else if (line.startsWith("> ")) {
     html.push(`<blockquote>${renderInline(line.slice(2))}</blockquote>`);
+  } else if (/^- \[[ xX]\]\s+/.test(line)) {
+    const checked = /^- \[[xX]\]/.test(line);
+    const label = line.replace(/^- \[[ xX]\]\s+/, "");
+    html.push(`<label class="ls-task"><input type="checkbox"${checked ? " checked" : ""} disabled> ${renderInline(label)}</label>`);
   } else if (line.startsWith("- ")) {
     html.push(`<ul><li>${renderInline(line.slice(2))}</li></ul>`);
   } else if (/^\d+\.\s+/.test(line)) {
     html.push(`<ol><li>${renderInline(line.replace(/^\d+\.\s+/, ""))}</li></ol>`);
+  } else if (/^[^:]+:\s+.+$/.test(line)) {
+    const [term, ...definitionParts] = line.split(":");
+    html.push(`<dl><dt>${renderInline(term.trim())}</dt><dd>${renderInline(definitionParts.join(":").trim())}</dd></dl>`);
   } else if (line.includes("|") && !line.startsWith("|")) {
     html.push(renderFormRow(line));
   } else {
@@ -202,6 +211,11 @@ function renderInline(value) {
 
   html = html.replace(/\*([^*]+)\*/g, "<strong>$1</strong>");
   html = html.replace(/_([^_]+)_/g, "<em>$1</em>");
+  html = html.replace(/~([^~]+)~/g, "<del>$1</del>");
+  html = html.replace(/==([^=]+)==/g, "<mark>$1</mark>");
+  html = html.replace(/\^([^^]+)\^/g, "<sup>$1</sup>");
+  html = html.replace(/(?<!\w)sub\(([^)]+)\)/g, "<sub>$1</sub>");
+  html = html.replace(/:([a-z0-9_+-]+):/gi, '<span class="ls-emoji" data-emoji="$1">:$1:</span>');
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
 
   return html;
@@ -231,6 +245,12 @@ function wrapDocument(body, metadata, hasFrontMatter) {
     "    section, .ls-grid { padding: 40px max(24px, calc((100vw - 960px) / 2)); }",
     "    h1 { margin: 0 0 12px; font-size: clamp(2rem, 4vw, 4rem); line-height: 1.05; }",
     "    p { max-width: 68ch; }",
+    "    blockquote { margin: 16px 0; padding-left: 16px; border-left: 4px solid #b42c3d; color: #3d4845; }",
+    "    hr { border: 0; border-top: 1px solid #d8d2c6; margin: 28px 0; }",
+    "    mark { padding: 0 4px; border-radius: 4px; background: #ffe08a; }",
+    "    dl { margin: 14px 0; } dt { font-weight: 800; } dd { margin: 4px 0 0 18px; }",
+    "    .ls-task { display: block; margin: 8px 0; }",
+    "    .ls-emoji { font-weight: 800; color: #b42c3d; }",
     "    .is-dark { color: #f8fafc; background: #25302f; }",
     "    .is-gray { background: #e7e3da; }",
     "    .ls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }",

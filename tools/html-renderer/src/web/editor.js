@@ -50,9 +50,47 @@ async function renderSource() {
       throw new Error(result.error || "Render failed");
     }
 
-    previewFrame.srcdoc = result.html;
+    previewFrame.srcdoc = makePreviewSafe(result.html);
     statusText.textContent = "Rendered";
   } catch (error) {
     statusText.textContent = error.message;
   }
+}
+
+function makePreviewSafe(html) {
+  const guard = [
+    "<style>",
+    ".ls-preview-toast { position: fixed; right: 16px; bottom: 16px; z-index: 9999; max-width: min(320px, calc(100vw - 32px)); padding: 10px 12px; border-radius: 8px; color: #fff; background: #172026; box-shadow: 0 10px 30px rgba(0,0,0,.25); font: 700 14px/1.35 system-ui, sans-serif; opacity: 0; transform: translateY(8px); transition: opacity .18s ease, transform .18s ease; }",
+    ".ls-preview-toast.is-visible { opacity: 1; transform: translateY(0); }",
+    "</style>",
+    "<script>",
+    "var previewToastTimer;",
+    "function showPreviewToast(message) {",
+    "  var toast = document.querySelector('.ls-preview-toast');",
+    "  if (!toast) {",
+    "    toast = document.createElement('div');",
+    "    toast.className = 'ls-preview-toast';",
+    "    document.body.appendChild(toast);",
+    "  }",
+    "  toast.textContent = message;",
+    "  toast.classList.add('is-visible');",
+    "  clearTimeout(previewToastTimer);",
+    "  previewToastTimer = setTimeout(function () { toast.classList.remove('is-visible'); }, 1600);",
+    "}",
+    "document.addEventListener('click', function (event) {",
+    "  var link = event.target.closest && event.target.closest('a');",
+    "  if (!link) return;",
+    "  event.preventDefault();",
+    "  var label = (link.textContent || 'Link').trim();",
+    "  var href = link.getAttribute('href') || '#';",
+    "  showPreviewToast('Demo action: ' + label + ' -> ' + href);",
+    "});",
+    "<\/script>"
+  ].join("");
+
+  if (html.includes("</body>")) {
+    return html.replace("</body>", guard + "</body>");
+  }
+
+  return html + guard;
 }

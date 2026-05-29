@@ -1,131 +1,97 @@
 ===
 title: LeStupid Demo
-description: A tiny intuitive language for humans and AI agents.
+description: A tiny language for humans to write and AI to understand.
 language: en
 ===
 
 section(dark):
   # LeStupid
-  Simpler than Markdown. Easier than HTML5.
-  Write what you mean. AI understands the shape.
+  Write like a human.
+  Structure just enough.
+  Let AI understand the rest.
 :section
 
 section:
-  ## One idea, three readers
-  Human reads: a clear note.
-  Browser receives: clean output.
-  AI reads: intent, target, rules, and structure.
-  > The writer should not fight syntax. The tool should understand the writer.
+  ## One simple idea
+  Markdown can write text.
+  HTML5 can describe pages.
+  Pseudocode can explain logic.
+  LeStupid keeps all three simple enough for a person to write without fear.
 :section
 
 grid(3):
   card:
-    # Human
-    Plain words first.
-    Short blocks.
-    No ceremony.
+    # Text
+    # A note
+    *Important* words, _quiet_ details, `exact` names.
+    - one idea
+    - another idea
   :card
 
   card:
-    # AI
-    Labels explain intent.
-    Indentation explains hierarchy.
-    Rules explain behavior.
+    # Page
+    section:
+      # Product Card
+      A small page block.
+      [Start !button](#)
+    :section
   :card
 
   card:
-    # Output
-    Render to HTML5.
-    Explain Elixir.
-    Explain Rust.
+    # Intent
+    prompt:
+      goal: turn this note into a clean page
+      keep: simple language
+      output: HTML5
+    :prompt
   :card
 :grid
 
 section(gray):
-  ## Required elements
-  This is the small core. A person can write it by feeling. An AI can map it safely.
-  code(lestupid-elements):
-    document:
-      === metadata ===
-      title, description, language, theme
+  ## HTML5, but easier to write
+  The human writes the meaning. A renderer can create HTML5.
+  code(lestupid):
+    section:
+      # Welcome
+      Explain the product in one sentence.
+      [Start !button](#)
+    :section
 
-    text:
-      # heading
-      plain paragraph
-      *bold* _italic_ `code`
-      [link](/path)
-      [button !button](/path)
-      > quote
-      - list item
-
-    layout:
-      section:
-      grid(2):
+    grid(2):
       card:
-
-    input:
-      form:
-      field: name | text | Label
-
-    media:
-      image: /image.jpg
-      video: /video.mp4
-      audio: /audio.mp3
-
-    meaning:
-      data:
-      workflow:
-      prompt:
-      code(target):
+        # Fast
+        Short blocks are easy to scan.
+      :card
+      card:
+        # Clear
+        Indentation shows hierarchy.
+      :card
+    :grid
   :code
 :section
 
-grid(2):
-  card:
-    # Tiny page
-    This describes a page without making the human write HTML tags.
-    code(lestupid):
-      section:
-        # Clear Page
-        This becomes HTML5.
-        [Start !button](/start)
-      :section
-
-      grid(2):
-        card:
-          # First
-          Simple content.
-        :card
-      :grid
-    :code
-  :card
-
-  card:
-    # HTML5 output idea
-    The renderer may produce HTML5, but the author writes LeStupid.
-    code(html5):
-      <main>
-        <section>
-          <h1>Clear Page</h1>
-          <p>This becomes HTML5.</p>
-          <a class="button" href="/start">Start</a>
-        </section>
-      </main>
-    :code
-  :card
-:grid
-
 section:
-  ## AI-readable code intent
-  LeStupid does not need to be Elixir or Rust.
-  It only needs to explain the job so an AI can generate Elixir or Rust correctly.
-  If `target` is missing, the AI may choose Python, C++, or another language.
-  If `target: Elixir` exists, the language is clear.
+  ## Code intent, simpler than pseudocode
+  You can write step by step.
+  You can also say what should happen.
+  AI can turn the intent into Elixir, Rust, Python, or another target.
 :section
 
 grid(2):
   card:
-    # Target is explicit
+    # Step by step
+    code(intent):
+      task: summarize notes
+      steps:
+        - remove empty notes
+        - keep the original language
+        - join the main ideas
+        - return a short summary
+    :code
+  :card
+
+  card:
+    # With target
     code(elixir-ai):
       target: Elixir
       module: Notes
@@ -138,41 +104,11 @@ grid(2):
         - return "No notes" when empty
     :code
   :card
-
-  card:
-    # Target can change
-    code(rust-ai):
-      target: Rust
-      struct: Note
-      fields:
-        title: String
-        body: String
-      function: word_count(note)
-      output: usize
-      rules:
-        - count title and body
-        - split by whitespace
-        - do not mutate input
-    :code
-  :card
 :grid
 
-section(gray):
-  ## Without target
-  This is still useful, but the output language is not fixed.
-  code(ai-intent):
-    function: summarize(notes)
-    input: list of strings
-    output: short string
-    rules:
-      - ignore empty notes
-      - keep the input language
-      - return "No notes" when empty
-  :code
+section(dark):
+  # The rule
+  If a human can read it, AI should understand it.
+  If AI needs more detail, add one clear line.
+  No ceremony. No hidden magic.
 :section
-
-bolum(koyu):
-  # Turkce de ayni
-  Insan kendi dilinde yazar. AI yapıyı anlar.
-  Markdown kadar sezgisel, HTML5 kadar faydalı, ama daha az hata yaptırır.
-:bolum

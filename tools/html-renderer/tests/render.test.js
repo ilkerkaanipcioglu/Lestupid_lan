@@ -145,12 +145,17 @@ assert.match(outputIndentTolerance, /<div class="ls-grid is-2" data-columns="2">
 assert.match(outputIndentTolerance, /<h1>Rounded Indent<\/h1>/);
 assert.match(outputIndentTolerance, /<h1>Tab Indent<\/h1>/);
 
-// 5. Check Definition List colon safety
+// 5. Check Definition List colon safety and Tag parsing
 const outputColonSafety = render(`
 İsim: Ahmet
 Not: Bu çok uzun bir açıklamadır ve asla tanım listesi olmamalıdır.
+Review the parser @todo @ai
+Keep the language simple #done
 `);
 assert.match(outputColonSafety, /<dl><dt>İsim<\/dt><dd>Ahmet<\/dd><\/dl>/);
 assert.match(outputColonSafety, /<p>Not: Bu çok uzun bir açıklamadır ve asla tanım listesi olmamalıdır.<\/p>/);
+assert.match(outputColonSafety, /<span class="ls-tag">@todo<\/span>/);
+assert.match(outputColonSafety, /<span class="ls-tag">@ai<\/span>/);
+assert.match(outputColonSafety, /<span class="ls-tag">#done<\/span>/);
 
 console.log("render.test.js passed");

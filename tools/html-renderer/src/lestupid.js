@@ -546,7 +546,7 @@ function renderInline(value) {
   html = html.replace(/(?<!\w)sub\(([^)]+)\)/g, "<sub>$1</sub>");
   html = html.replace(/:([a-z0-9_+-]+):/gi, '<span class="ls-emoji" data-emoji="$1">:$1:</span>');
   html = html.replace(/\[\[([^\]]+)\]\]/g, '<a href="#$1" class="ls-reference">[[$1]]</a>');
-  html = html.replace(/(^|\s)@([\p{L}0-9_-]+)/gu, '$1<span class="ls-tag">@$2</span>');
+  html = html.replace(/(^|\s)([@#])([\p{L}0-9_-]+)/gu, '$1<span class="ls-tag">$2$3</span>');
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
 
   return html;

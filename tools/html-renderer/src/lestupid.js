@@ -27,8 +27,28 @@ const styleAliases = new Map([
   ["buton", "button"]
 ]);
 
+const languageIslands = new Set([
+  "md",
+  "markdown",
+  "html",
+  "html5",
+  "css",
+  "js",
+  "javascript",
+  "ts",
+  "typescript",
+  "elixir",
+  "abap",
+  "rust",
+  "python",
+  "sql",
+  "json",
+  "yaml",
+  "mermaid"
+]);
+
 function render(source) {
-  const lines = source.replace(/\r\n/g, "\n").split("\n");
+  const lines = normalizeIndentation(source).replace(/\r\n/g, "\n").split("\n");
   const context = {
     html: [],
     metadata: {},
@@ -116,9 +136,19 @@ function render(source) {
   return wrapDocument(context.html.join("\n"), context.metadata, context.frontMatterSeen);
 }
 
+function normalizeIndentation(source) {
+  return source
+    .replace(/\t/g, "  ")
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .map((line) => line.replace(/^ +/, (spaces) => " ".repeat(Math.round(spaces.length / 2) * 2)))
+    .join("\n");
+}
+
 function getIndent(rawLine) {
-  const match = rawLine.match(/^( *)/);
-  return match ? match[1].length : 0;
+  const leadingWhitespace = (rawLine.match(/^[ \t]*/) || [""])[0];
+  const spacesOnly = leadingWhitespace.replace(/\t/g, "  ");
+  return spacesOnly.length;
 }
 
 function isInForm(context) {
@@ -131,6 +161,7 @@ function isListLine(line) {
 
 function isTableRow(line, inForm) {
   if (inForm) return null;
+  if (/^[xo]\s+/i.test(line)) return null;
   if (isListLine(line)) return null;
 
   let parts = [];
@@ -155,6 +186,14 @@ function readMetadata(line, metadata) {
 
 function parseBlockOpener(line, rawLine) {
   const clean = line.trim().toLowerCase();
+
+  const namedCodeMatch = clean.match(/^(kod|code|flow|akis|akış):\s+(.+)$/);
+  if (namedCodeMatch) {
+    const kind = namedCodeMatch[1];
+    const language = kind === "flow" || kind === "akis" || kind === "akış" ? "flow" : "intent";
+    return { type: "code", options: [language] };
+  }
+
   if (!clean.endsWith(":")) return null;
 
   const content = clean.slice(0, -1).trim();
@@ -188,6 +227,12 @@ function parseBlockOpener(line, rawLine) {
   if (content === "kod" || content === "code") {
     return { type: "code", options: ["text"] };
   }
+  if (content === "flow" || content === "akis" || content === "akış") {
+    return { type: "code", options: ["flow"] };
+  }
+  if (languageIslands.has(content)) {
+    return { type: "code", options: [content] };
+  }
   const codeMatch = content.match(/^(kod|code)\s*\(([^)]+)\)$/);
   if (codeMatch) {
     return { type: "code", options: [codeMatch[2].trim()] };
@@ -206,6 +251,10 @@ function parseBlockOpener(line, rawLine) {
     }
   }
 
+  if (line.trim().endsWith(":")) {
+    return { type: "section", options: ["intent"], title: line.trim().slice(0, -1).trim() };
+  }
+
   return null;
 }
 
@@ -214,6 +263,9 @@ function openBlock(block, context) {
 
   if (block.type === "section") {
     context.html.push(`<section class="${escapeAttribute(className)}">`);
+    if (block.title) {
+      context.html.push(`<h2>${renderInline(block.title)}</h2>`);
+    }
   } else if (block.type === "grid") {
     const columns = block.options.find((option) => /^\d+$/.test(option)) || "auto";
     context.html.push(`<div class="${escapeAttribute(className)}" data-columns="${escapeAttribute(columns)}">`);
@@ -284,6 +336,25 @@ function renderInlineBlock(line, context) {
     return;
   }
 
+  const tagLineMatch = line.match(/^tag:\s*(.+)$/i);
+  if (tagLineMatch) {
+    html.push(`<p><span class="ls-tag">@${escapeHtml(tagLineMatch[1].trim())}</span></p>`);
+    return;
+  }
+
+  const refLineMatch = line.match(/^ref:\s*(.+)$/i);
+  if (refLineMatch) {
+    const label = refLineMatch[1].trim();
+    html.push(`<p><a href="#${escapeAttribute(label)}" class="ls-reference">[[${escapeHtml(label)}]]</a></p>`);
+    return;
+  }
+
+  const quoteLineMatch = line.match(/^quote:\s*(.+)$/i);
+  if (quoteLineMatch) {
+    html.push(`<blockquote>${renderInline(quoteLineMatch[1].trim())}</blockquote>`);
+    return;
+  }
+
   if (line.startsWith("### ")) {
     html.push(`<h3>${renderInline(line.slice(4))}</h3>`);
   } else if (line.startsWith("## ")) {
@@ -298,13 +369,25 @@ function renderInlineBlock(line, context) {
     const checked = /^- \[[xX]\]/.test(line);
     const label = line.replace(/^- \[[ xX]\]\s+/, "");
     html.push(`<label class="ls-task"><input type="checkbox"${checked ? " checked" : ""} disabled> ${renderInline(label)}</label>`);
+  } else if (/^x\s+/i.test(line)) {
+    html.push(`<label class="ls-task"><input type="checkbox" checked disabled> ${renderInline(line.replace(/^x\s+/i, ""))}</label>`);
+  } else if (/^o\s+/i.test(line)) {
+    html.push(`<label class="ls-task"><input type="checkbox" disabled> ${renderInline(line.replace(/^o\s+/i, ""))}</label>`);
   } else if (line.startsWith("- ")) {
     html.push(`<ul><li>${renderInline(line.slice(2))}</li></ul>`);
   } else if (/^\d+\.\s+/.test(line)) {
     html.push(`<ol><li>${renderInline(line.replace(/^\d+\.\s+/, ""))}</li></ol>`);
-  } else if (/^[^:]+:\s+.+$/.test(line)) {
-    const [term, ...definitionParts] = line.split(":");
-    html.push(`<dl><dt>${renderInline(term.trim())}</dt><dd>${renderInline(definitionParts.join(":").trim())}</dd></dl>`);
+  } else if (/^([\p{L}\w\s-]{1,15}):\s+(.+)$/u.test(line)) {
+    const dlMatch = line.match(/^([\p{L}\w\s-]{1,15}):\s+(.+)$/u);
+    const term = dlMatch[1];
+    const termLower = term.trim().toLowerCase();
+    const excludedTerms = new Set(["not", "note", "uyarı", "uyari", "warning", "dikkat", "attention", "http", "https"]);
+    if (excludedTerms.has(termLower)) {
+      html.push(`<p>${renderInline(line)}</p>`);
+    } else {
+      const definition = dlMatch[2];
+      html.push(`<dl><dt>${renderInline(term.trim())}</dt><dd>${renderInline(definition.trim())}</dd></dl>`);
+    }
   } else if (line.includes("|") && !line.startsWith("|")) {
     const formRow = renderFormRow(line, false);
     if (formRow) html.push(formRow);
@@ -462,6 +545,8 @@ function renderInline(value) {
   html = html.replace(/\^([^^]+)\^/g, "<sup>$1</sup>");
   html = html.replace(/(?<!\w)sub\(([^)]+)\)/g, "<sub>$1</sub>");
   html = html.replace(/:([a-z0-9_+-]+):/gi, '<span class="ls-emoji" data-emoji="$1">:$1:</span>');
+  html = html.replace(/\[\[([^\]]+)\]\]/g, '<a href="#$1" class="ls-reference">[[$1]]</a>');
+  html = html.replace(/(^|\s)@([\p{L}0-9_-]+)/gu, '$1<span class="ls-tag">@$2</span>');
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
 
   return html;
@@ -497,6 +582,8 @@ function wrapDocument(body, metadata, hasFrontMatter) {
     "    dl { margin: 14px 0; } dt { font-weight: 800; } dd { margin: 4px 0 0 18px; }",
     "    .ls-task { display: block; margin: 8px 0; }",
     "    .ls-emoji { font-weight: 800; color: #b42c3d; }",
+    "    .ls-tag { display: inline-block; padding: 2px 7px; border-radius: 999px; color: #7a2430; background: #f4d7dc; font-size: .9em; font-weight: 800; }",
+    "    .ls-reference { color: #25605a; font-weight: 800; text-decoration: none; border-bottom: 1px dashed currentColor; }",
     "    .is-dark { color: #f8fafc; background: #25302f; }",
     "    .is-gray { background: #e7e3da; }",
     "    .ls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }",

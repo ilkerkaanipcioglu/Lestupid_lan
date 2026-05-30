@@ -2,7 +2,7 @@
 
 This is an experimental tool, not the definition of the language.
 
-The language source of truth is [`../../LESTUPID.md`](../../LESTUPID.md).
+The language source of truth is [`../../lestupid.md`](../../lestupid.md).
 
 ## Run
 

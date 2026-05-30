@@ -1,28 +1,30 @@
-# Implementation Plan - LeStupid 2.0 (Zero-Syntax & AI-Native)
+# Implementation Plan - Repository Refactoring & Bug Fixes
 
-Evolving LeStupid from a lightweight markup language to a **Zero-Syntax, AI-Native Specification**. The core philosophy is that a human should be able to write completely intuitively (without knowing Markdown, HTML5, TXT formatting, or programming syntaxes), and an AI model can parse and render/compile the intent perfectly (knowing whether it is a table, form, layout, or code logic).
+Resolving critical bugs, architectural inconsistencies, and usability issues identified during the repository review of LeStupid.
 
 ## Proposed Changes
 
-### Spec & Documentation
-- `[NEW] specs/lestupid-2.0-spec.md` (Completed)
-- `[MODIFY] README.md` (Completed)
-- `[MODIFY] lestupid.md` (Completed)
+### Core Parser (`tools/html-renderer/src/lestupid.js`)
+- **[MODIFY] [lestupid.js](file:///B:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/tools/html-renderer/src/lestupid.js)**:
+  1. Fix the Tab Indentation Bug: Update `getIndent` to treat `\t` as 2 spaces (replacing it with `  `).
+  2. Fix Aggressive Colons: Refine the definition list regex to limit it to short terms (maximum 25 characters of letters/numbers/spaces/hyphens) to avoid mangling normal sentences with colons.
 
-### Core Parser Update
-- `[MODIFY] tools/html-renderer/src/lestupid.js`:
-  Upgrade the parser logic to:
-  1. Support indent-based block closing (no more mandatory `:section`, `:card`, `:grid`, `:code` lines needed, though they remain supported for backwards compatibility).
-  2. Parse natural section headers (e.g. `Koyu Bölüm:`, `Gri Bölüm:`, `Bölüm:`, `Dark Section:`).
-  3. Parse natural grid layouts (e.g. `Kutular (3 Kolon):`, `Izgara (2 Kolon):`, `Grid (3 columns):`).
-  4. Parse natural card blocks (e.g. `Kart:`, `Card:`).
-  5. Parse natural buttons and action links (e.g. `Buton: "Start" -> #`, `Link: "Google" -> https://google.com`).
-  6. Support CSV/pipe/space-separated table automatic detection and parsing.
+### Web Editor (`tools/html-renderer/src/web/editor.js`)
+- **[MODIFY] [editor.js](file:///B:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/tools/html-renderer/src/web/editor.js)**:
+  1. Fix Trapped Iframe Links: Allow local link navigation within the iframe preview. For external links (`http://` or `https://`), open them in a new tab (`_blank`) instead of fully locking them.
+
+### Documentation & Git Setup
+- **[MODIFY] [README.md](file:///B:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/tools/html-renderer/README.md)**:
+  - Fix the broken case-sensitive relative link pointing to `LESTUPID.md` (rename to lowercase `lestupid.md`).
+- **[NEW] [.gitignore](file:///B:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/.gitignore)**:
+  - Add a root-level `.gitignore` file to prevent committing `node_modules`, system files, and compiled HTML artifacts.
 
 ---
 
 ## Verification Plan
 
-### Manual Verification
-- We will test the updated parser by loading the zero-syntax example files (`landing-page.ls`, `dashboard-data.ls`, `feedback-form.ls`) and rendering them to HTML.
-- We will run the local Node server and check that the web editor renders LeStupid 2.0 code correctly.
+### Automated & Manual Verification
+1. Run the Node test suite (`npm test`) to ensure everything passes.
+2. Verify that tab characters in `.ls` source files are parsed exactly like 2-space indents.
+3. Test that sentences containing colons (e.g. `Note: this is a sentence`) are rendered as normal paragraphs rather than `<dl>` blocks.
+4. Open the editor in the browser at `http://127.0.0.1:4174/` and verify that link clicks in the preview navigate locally or open in a new tab successfully.

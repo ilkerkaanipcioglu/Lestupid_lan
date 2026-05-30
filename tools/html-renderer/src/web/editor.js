@@ -4,6 +4,7 @@ const previewFrame = document.querySelector("#previewFrame");
 const statusText = document.querySelector("#statusText");
 const resetButton = document.querySelector("#resetButton");
 const editButton = document.querySelector("#editButton");
+const warningPanel = document.querySelector("#warningPanel");
 
 let originalSource = "";
 let renderTimer = 0;
@@ -39,6 +40,7 @@ editButton.addEventListener("click", () => {
 
 async function renderSource() {
   try {
+    showIndentWarnings(sourceInput.value);
     const response = await fetch("/api/render", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -55,6 +57,38 @@ async function renderSource() {
   } catch (error) {
     statusText.textContent = error.message;
   }
+}
+
+function showIndentWarnings(source) {
+  const warnings = findIndentWarnings(source);
+  if (warnings.length === 0) {
+    warningPanel.hidden = true;
+    warningPanel.textContent = "";
+    return;
+  }
+
+  warningPanel.hidden = false;
+  warningPanel.textContent = warnings.slice(0, 2).join(" ");
+}
+
+function findIndentWarnings(source) {
+  const warnings = [];
+  const lines = source.replace(/\r\n/g, "\n").split("\n");
+
+  lines.forEach((line, index) => {
+    if (!line.trim()) return;
+    if (/^\t+/.test(line)) {
+      warnings.push(`Line ${index + 1}: tab indentation is treated as two spaces.`);
+      return;
+    }
+
+    const indent = (line.match(/^ */) || [""])[0].length;
+    if (indent % 2 === 1) {
+      warnings.push(`Line ${index + 1}: indentation was rounded to the nearest two-space level.`);
+    }
+  });
+
+  return warnings;
 }
 
 function makePreviewSafe(html) {
@@ -80,10 +114,16 @@ function makePreviewSafe(html) {
     "document.addEventListener('click', function (event) {",
     "  var link = event.target.closest && event.target.closest('a');",
     "  if (!link) return;",
-    "  event.preventDefault();",
-    "  var label = (link.textContent || 'Link').trim();",
     "  var href = link.getAttribute('href') || '#';",
-    "  showPreviewToast('Demo action: ' + label + ' -> ' + href);",
+    "  var isExternal = /^(https?:)?\\/\\//i.test(href);",
+    "  if (isExternal) {",
+    "    event.preventDefault();",
+    "    window.open(href, '_blank');",
+    "    showPreviewToast('Opening external link: ' + href);",
+    "  } else {",
+    "    var label = (link.textContent || 'Link').trim();",
+    "    showPreviewToast('Navigating: ' + label + ' -> ' + href);",
+    "  }",
     "});",
     "<\/script>"
   ].join("");

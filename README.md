@@ -1,65 +1,73 @@
-# LeStupid
+# LeStupid 2.0 — Zero-Syntax & AI-Native Markup 🧠✨
 
-LeStupid is a small human-first language for expressing thoughts, documents, interfaces, workflows, and AI instructions with the same plain structure.
+> *"Bir dil yazacağız, çünkü kurallarla boğuşmak istemiyoruz."*
+> 
+> **LeStupid 2.0** is a design paradigm built on a simple premise: **Make it impossible to write incorrect code.** It is a zero-syntax, AI-native markup philosophy where humans write with 100% natural, everyday intuition, and AI compilers map it to beautiful, responsive, and functional digital outputs.
 
-The purpose of this repository is the language itself: its philosophy, grammar, behavior, and examples. Tools are secondary and live under `tools/` so they never define the language.
+---
 
-## Start Here
+## 📖 Manifesto & Felsefe
 
-Read [lestupid.md](lestupid.md) for the complete language guide.
+İnsanlar düşüncelerini aktarırken parantezlerin, etiketlerin ve noktalı virgüllerin karmaşasında boğulurlar. HTML5, Markdown veya programlama dillerinin teknik detayları, yaratıcılığın ve hızlı üretimin önündeki en büyük engellerdir.
 
-That file is intentionally self-contained. A person should be able to write LeStupid by intuition, and an AI agent should be able to understand the language by reading that one file.
+**LeStupid 2.0**, akıllı olmaya çalışmayan, kurallar dayatmayan, olabildiğince "aptal" ve yalın bir dildir. Çünkü biz inanıyoruz ki: **Gerçek zeka, sıfır sözdiziminin ardında yatan sadelikte gizlidir.**
 
-## Core Idea
+### 🤝 İnsan ile Yapay Zekanın Kusursuz Köprüsü
 
-LeStupid does not force a single natural language.
+Bu dil ne sadece insanlar için ne de sadece makineler için derlendi. LeStupid, **insan ile yapay zekanın (AI) aynı sayfada buluştuğu ortak bir bilinç alanıdır.**
 
-If a document is written in English, it may use English words:
+- **İnsan okuduğunda zorlanmaz:** Tıpkı not defterine alınan el yazısı notlar veya zihnindeki düşünce bulutları gibidir. Yanlış yapabileceği bir kural yoktur.
+- **Yapay Zeka okuduğunda duraksamaz:** Karmaşık AST (Soyut Sözdizimi Ağacı) yapıları yerine, AI doğrudan bağlamı, hizalamayı ve kelime gruplarını analiz ederek insan niyetini mükemmel bir şekilde anlar, şık arayüzlere ve çalışan kod bloklarına dönüştürür.
 
-```lestupid
-section(dark):
-  # Build Clearly
-  Write the idea once. Keep the structure obvious.
-  [Start !button](/start)
-:section
-```
+---
 
-If a document is written in Turkish, it may use Turkish words:
+## 🌟 Üç Altın İlke (The Three Instincts)
 
-```lestupid
-bolum(koyu):
-  # Açıkça Kur
-  Fikri bir kez yaz. Yapıyı anlaşılır tut.
-  [Başla !buton](/basla)
-:bolum
-```
+1. **Görsel Sezgi (Visual Instinct)**
+   Eğer bir metin başlık gibi görünüyorsa başlıktır. Eğer bir tablo gibi çizilmişse tablodur. İşaretlere değil, görünüme odaklanılır.
 
-Both are valid. The writer chooses the natural language; LeStupid keeps the structure readable.
+2. **Konum Sezgisi (Positional Instinct)**
+   Gruplama ve hiyerarşi sadece doğal girintilerle (`indentation`) belirlenir. Derin parantezler veya kapatılmamış etiketler yüzünden çöken sistemler geride kaldı.
 
-## Repository Layout
+3. **Eylem Sezgisi (Conversational Action)**
+   Butonlar, yönlendirmeler ve form alanları karmaşık syntax yapılarıyla değil, tamamen konuşma diliyle ve sezgisel oklarla (`->`) ifade edilir.
 
+---
+
+## ⚡ Bir Bakışta LeStupid 2.0
+
+Karmaşık kurallar yerine, sadece kağıda not alır gibi yazın:
+
+### Örnek Tablo Yazımı (Sözdizimsiz):
 ```text
-lestupid.md              canonical language guide for humans and AI agents
-README.md                project orientation
-tools/html-renderer/     optional experimental HTML renderer
+Ürün Adı | Fiyat | Stok Durumu
+Elma     | 15 TL | Var
+Armut    | 20 TL | Yok
 ```
 
-## Design Principles
-
-1. Human-first: a readable note should already be close to valid LeStupid.
-2. AI-readable: the structure should be low-noise and easy for a model to transform.
-3. Language-flexible: English and Turkish names can describe the same structural ideas.
-4. Small grammar: indentation, blocks, metadata, and simple inline marks carry most meaning.
-5. Tool-independent: renderers, editors, and compilers are implementations, not the source of truth.
-
-## Tools
-
-Tools are optional. The current experimental tool is a dependency-free HTML renderer:
-
-```bash
-cd tools/html-renderer
-npm test
-npm run build:example
+### Örnek Eylem Butonu:
+```text
+Buton: "Hemen Keşfet" -> /kesfet
 ```
 
-The tool is useful for testing examples, but the language definition remains [lestupid.md](lestupid.md).
+### Örnek Form Yapısı:
+```text
+Giriş Formu:
+  Kullanıcı Adı: [Metin]
+  Şifre: [Gizli Metin]
+  Buton: Giriş Yap -> /login
+```
+
+---
+
+## 📂 Dosya Yapısı
+
+Proje dosyalarınız aşağıdaki gibi organize edilmiştir:
+
+*   [README.md](file:///b:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/README.md) — Bu tanıtım ve genel bakış belgesi.
+*   [lestupid.md](file:///b:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/lestupid.md) — Genişletilmiş felsefe, rakiplerle karşılaştırma ve ekosistem yol haritası.
+*   [specs/lestupid-2.0-spec.md](file:///b:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/specs/lestupid-2.0-spec.md) — **Sıfır Sözdizimli Dil Spesifikasyonu** ve ayrıntılı bileşen tasarımları.
+
+---
+
+> *LeStupid. Because smart is overrated.*

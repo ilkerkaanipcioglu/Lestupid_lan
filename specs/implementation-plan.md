@@ -5,27 +5,24 @@ Evolving LeStupid from a lightweight markup language to a **Zero-Syntax, AI-Nati
 ## Proposed Changes
 
 ### Spec & Documentation
+- `[NEW] specs/lestupid-2.0-spec.md` (Completed)
+- `[MODIFY] README.md` (Completed)
+- `[MODIFY] lestupid.md` (Completed)
 
-#### [NEW] [lestupid-2.0-spec.md](file:///b:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/specs/lestupid-2.0-spec.md)
-Create a new file detailing the core syntax patterns of LeStupid 2.0 (Zero-Syntax):
-- **Natural Headers & Text**
-- **Zero-Syntax Tables** (Auto-detected tables)
-- **Zero-Syntax Lists** (Bullet-agnostic)
-- **Natural Action Buttons & Links**
-- **Conversational Layouts (Grids, Cards, Sections)**
-- **Conversational Forms**
-- **Natural Logic & Action Blocks (AI-Translated Code)**
-
-#### [MODIFY] [README.md](file:///b:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/README.md)
-Update `README.md` to reflect the LeStupid 2.0 vision: "Because smart is overrated. Zero-syntax, pure intuition, AI-native."
-
-#### [MODIFY] [lestupid.md](file:///b:/DEV/HAREZM_EKOSISTEMI/LesTupid_Lan/lestupid.md)
-Refine the language design and ecosystem roadmap in `lestupid.md` to align with the new 2.0 specification.
+### Core Parser Update
+- `[MODIFY] tools/html-renderer/src/lestupid.js`:
+  Upgrade the parser logic to:
+  1. Support indent-based block closing (no more mandatory `:section`, `:card`, `:grid`, `:code` lines needed, though they remain supported for backwards compatibility).
+  2. Parse natural section headers (e.g. `Koyu Bölüm:`, `Gri Bölüm:`, `Bölüm:`, `Dark Section:`).
+  3. Parse natural grid layouts (e.g. `Kutular (3 Kolon):`, `Izgara (2 Kolon):`, `Grid (3 columns):`).
+  4. Parse natural card blocks (e.g. `Kart:`, `Card:`).
+  5. Parse natural buttons and action links (e.g. `Buton: "Start" -> #`, `Link: "Google" -> https://google.com`).
+  6. Support CSV/pipe/space-separated table automatic detection and parsing.
 
 ---
 
 ## Verification Plan
 
 ### Manual Verification
-- We will construct multiple realistic "Zero-Syntax" example files (e.g., a landing page, a dashboard table, a login form, and a simple logic flow).
-- We will verify that these examples are fully understandable by any LLM (AI) and can be mapped directly to semantic HTML5 / CSS / JS code without ambiguity.
+- We will test the updated parser by loading the zero-syntax example files (`landing-page.ls`, `dashboard-data.ls`, `feedback-form.ls`) and rendering them to HTML.
+- We will run the local Node server and check that the web editor renders LeStupid 2.0 code correctly.
